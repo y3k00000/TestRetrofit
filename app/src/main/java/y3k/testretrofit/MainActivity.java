@@ -10,12 +10,15 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.HashMap;
 
+import api.com.w3school.TestNoteResponse;
+import api.com.w3school.W3SchoolApi;
 import api.org.httpbin.GetResponse;
 import api.org.httpbin.PostResponse;
 import api.org.httpbin.Response;
 import api.org.httpbin.HttpBinOrgApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("HttpOrg", postResponse==null||postResponse.json==null?"null":postResponse.json.toString());
                     Log.d("HttpOrg", postResponse==null?"null":postResponse.data);
                     Log.d("HttpOrg", postResponse==null?"null":postResponse.form.toString());
+
+                    retrofit = new Retrofit.Builder()
+                            .baseUrl("https://www.w3schools.com/")
+                            .addConverterFactory(SimpleXmlConverterFactory.create())
+                            .build();
+
+                    W3SchoolApi w3School = retrofit.create(W3SchoolApi.class);
+                    TestNoteResponse noteResponse = w3School.getTestNoteXml().execute().body();
+                    Log.d("W3School", noteResponse==null?"null":noteResponse.body);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
